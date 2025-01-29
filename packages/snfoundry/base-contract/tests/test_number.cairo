@@ -1,6 +1,6 @@
 use snforge_std::{
     declare, start_cheat_caller_address, stop_cheat_caller_address, ContractClassTrait,
-    DeclareResultTrait, spy_events, EventSpyAssertionsTrait, get_class_hash
+    DeclareResultTrait, spy_events, EventSpyAssertionsTrait, get_class_hash,
 };
 
 use starknet::{ContractAddress};
