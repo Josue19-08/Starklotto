@@ -1,28 +1,31 @@
-#[contract]
+#[starknet::interface]
+pub trait IParticipants<TContractState> {
+    fn add_participant(ref self: TContractState);
+    fn get_participants(self: @TContractState) -> Vec<ContractAddress>;
+}
+
+#[starknet::contract]
 mod Participants {
-    use array::ArrayTrait;
-    use starknet::ContractAddress;
-    
+    use starknet::storage::Vec;
+    use starknet::{ContractAddress, get_caller_address};
+
+    #[storage]
     struct Storage {
-        participants: Array<ContractAddress>,
+        participants: Vec<ContractAddress>,
     }
 
-    #[external(v0)]
-    fn register_participant(ref self: ContractState, addr: ContractAddress) {
-        let mut participants = self.participants.read();
-
-        for i in 0..participants.len() {
-            if participants.at(i) == addr {
-                panic("Address already registered");
+    #[abi(embed_v0)]
+    impl ParticipantsImpl of IParticipants<ContractState> {
+        fn add_participant(ref self: ContractState) {
+            let caller = get_caller_address();
+            if self.participants.iter().any(|addr| *addr == caller) {
+                return;
             }
+            self.participants.append(caller);
         }
 
-        participants.append(addr);
-        self.participants.write(participants);
-    }
-
-    #[external(v0)]
-    fn get_participants(ref self: ContractState) -> Array<ContractAddress> {
-        self.participants.read()
+        fn get_participants(self: @ContractState) -> Vec<ContractAddress> {
+            self.participants.read()
+        }
     }
 }
