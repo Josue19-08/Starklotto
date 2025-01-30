@@ -11,6 +11,8 @@ keywords = ["cairo", "contracts", "starknet"]
 
 [dependencies]
 starknet = "2.8.2"
+pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib" }
+openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git"}
 
 [dev-dependencies]
 snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry", tag = "v0.31.0" }
